@@ -106,7 +106,7 @@ class MainController {
     login() {
         this.window.hide()
         this.window.setSize(1000, 800, true)
-        this.window.setResizable(true)
+        this.window.resizable=true
         this.window.show()
     }
 
@@ -128,7 +128,7 @@ class MainController {
 
     changeTitle() {
         this.window.webContents.executeJavaScript(`
-            var titleName = 'Freechat (version: ${app.getVersion()})';
+            var titleName = 'WeChat';
             document.title = titleName;
             new MutationObserver(mutations => {
                 if (document.title !== titleName) {

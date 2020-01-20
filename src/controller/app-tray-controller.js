@@ -3,7 +3,9 @@ const {
     Menu,
     nativeImage,
     Tray,
-    ipcMain
+    ipcMain,
+    interval,
+    iconType
 } = require('electron');
 const path = require('path');
 
@@ -21,7 +23,10 @@ class AppTrayController {
 
         const context = Menu.buildFromTemplate([{
                 label: '切换聊天窗口',
-                click: () => this.mainController.toggle()
+                click: () => {
+                    this.cleanTrayFlash()
+                    this.mainController.toggle()
+                }
             },
             {
                 label: '退出',
@@ -34,11 +39,42 @@ class AppTrayController {
         this.tray.on('click', () => this.clickEvent())
 
         ipcMain.on('updateUnread', (event, value) => {
-            value !== this.unreadType && this.tray.setImage(this.getUnreadImage(value))
+            if(value !== this.unreadType){
+                let trayFlash = true
+                if(value==='important'){
+                    this.iconType=value;
+                }
+                if (!this.interval) {
+                    this.interval = setInterval(() => {
+                        let icon
+                        if (trayFlash) {
+                            icon = nativeImage.createFromPath(path.join(__dirname, '../../assets/iconFlashBlack.png'))
+                            trayFlash = false
+                        } else {
+                            icon = this.getUnreadImage(this.iconType)
+                            trayFlash = true
+                        }
+                        this.tray.setImage(icon)
+                    }, 700)
+                }
+            }else{
+                this.cleanTrayFlash()
+            }
+
         })
     }
 
+    cleanTrayFlash() {
+        if (this.interval) {
+            clearInterval(this.interval);
+            this.interval = null;
+            this.iconType = null;
+            this.tray.setImage(this.getUnreadImage());
+        }
+    }
+
     clickEvent() {
+        this.cleanTrayFlash()
         this.mainController.toggle()
     }
 

@@ -1,11 +1,9 @@
 {
   "name": "electron-wechat",
-  "productName": "Freechat",
   "version": "1.0.0",
-  "description": "Wechat desktop application",
+  "description": "WeChat desktop application",
   "main": "src/main.js",
   "scripts": {
-    "start": "electron src/main.js",
     "pack": "electron-builder --dir",
     "dist:linux": "electron-builder --linux AppImage",
     "dist:macOS": "electron-builder --mac",
@@ -23,15 +21,19 @@
   "author": "Howard Ju <howard.ju@outlook.com>",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^5.0.4",
-    "electron-builder": "^20.44.4"
+    "electron": "^7.1.9",
+    "electron-builder": "^22.2.0"
   },
   "build": {
     "appId": "nz.co.enkru.${name}",
+    "files": [
+      "**/*",
+      "build/**"
+    ],
     "linux": {
       "category": "Network;Utility",
       "desktop": {
-        "StartupWMClass": "freechat"
+        "StartupWMClass": "WeChat"
       },
       "target": [
         "AppImage",
@@ -43,5 +45,6 @@
         "dmg"
       ]
     }
-  }
+  },
+  "dependencies": {}
 }
